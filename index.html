@@ -19,18 +19,15 @@
 <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
 
 <script>
-// =====================================================
-// 🔥 CONFIG ВСТАВИТЬ СЮДА — скопируй из Firebase Console
-// =====================================================
+// ✅ ВАШ FIREBASE КОНФИГ (уже вставлен)
 const firebaseConfig = {
-  apiKey: "AIzaSyCnRJ5aqeGFdydQY96GOY1Cky2an4duKEY",
+  apiKey: "AIzaSyCnRJ5aqeGFdyQY96G0Y1Cky2an4duKEY",
   authDomain: "taxi-app-sync.firebaseapp.com",
   projectId: "taxi-app-sync",
-  storageBucket: "taxi-app-sync.firebasestorage.app",
+  storageBucket: "taxi-app-sync.appspot.com",
   messagingSenderId: "846611322507",
   appId: "1:846611322507:web:cfe7bda2fe16a21868e68e"
 };
-// =====================================================
 
 // Инициализация Firebase
 firebase.initializeApp(firebaseConfig);
@@ -40,12 +37,11 @@ const DOC_ID = 'main';
 </script>
 
 <script>
-// Inline Manifest
+// Manifest
 const manifest = {
   name: "Учёт поездок на такси",
   short_name: "Такси",
   description: "Учёт поездок на такси с синхронизацией",
-  start_url: "./",
   display: "standalone",
   orientation: "portrait",
   background_color: "#f8f9fa",
@@ -58,7 +54,7 @@ const manifest = {
       purpose: "any maskable"
     },
     {
-      src: "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Crect width='512' height='512' fill='%232d8b4d'/%3E%3Ctext x='256' y='370' font-size='320' text-anchor='middle' fill='white'%3E🚕%3C/text%3E%3C/svg%3E",
+      src: "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Crect width='512' height='512' fill='%232d8b4d'/%3E%3Ctext x='256' y='370' font-size='320' text-anchor='middle' fill='white'%3E%3C/text%3E%3C/svg%3E",
       sizes: "512x512",
       type: "image/svg+xml",
       purpose: "any maskable"
@@ -86,7 +82,6 @@ document.head.appendChild(manifestLink);
   --danger: #dc3545;
   --success: #28a745;
   --info: #17a2b8;
-  --warning: #ffc107;
   --radius: 12px;
   --shadow: 0 4px 12px rgba(0,0,0,0.06);
 }
@@ -106,7 +101,6 @@ body {
 .header { text-align: center; margin-bottom: 24px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; }
 .header h1 { color: var(--primary); font-size: 1.8em; }
 
-/* Индикатор синхронизации */
 .sync-status {
   display: inline-flex;
   align-items: center;
@@ -133,7 +127,6 @@ body {
   50% { opacity: 0.3; }
 }
 
-/* Баннер установки PWA */
 .install-banner {
   background: linear-gradient(135deg, var(--primary), var(--accent));
   color: white;
@@ -161,7 +154,6 @@ body {
   white-space: nowrap;
 }
 
-/* Баннер ошибки Firebase */
 .firebase-error-banner {
   background: #f8d7da;
   border: 2px solid var(--danger);
@@ -173,13 +165,6 @@ body {
 }
 .firebase-error-banner.show { display: block; }
 .firebase-error-banner h3 { margin-bottom: 8px; }
-.firebase-error-banner code { 
-  background: rgba(0,0,0,0.1); 
-  padding: 2px 6px; 
-  border-radius: 4px; 
-  font-size: 0.9em;
-  word-break: break-all;
-}
 
 .summary-cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; margin-bottom: 24px; }
 .card { background: var(--card-bg); border-radius: var(--radius); padding: 20px; box-shadow: var(--shadow); border-left: 4px solid var(--primary); }
@@ -278,14 +263,12 @@ tr:hover { background: #fcfcfc; }
 </head>
 <body>
 
-<!-- Баннер ошибки Firebase -->
 <div class="firebase-error-banner" id="firebaseErrorBanner">
   <h3>⚠️ Ошибка подключения к Firebase</h3>
   <p id="firebaseErrorText"></p>
-  <p style="margin-top: 10px;">Приложение работает в локальном режиме (данные сохраняются только на этом устройстве).</p>
+  <p style="margin-top: 10px;">Приложение работает в локальном режиме.</p>
 </div>
 
-<!-- Баннер установки PWA -->
 <div class="install-banner" id="installBanner">
   <div class="install-banner-text">
     <div class="install-banner-title">📱 Установить как приложение</div>
@@ -343,7 +326,7 @@ tr:hover { background: #fcfcfc; }
         <label>ФИО <span style="font-weight: normal; color: var(--text-light);">(начните вводить)</span></label>
         <div class="fio-input-wrapper">
           <input type="text" id="tripFio" placeholder="Иванов И.И." autocomplete="off" oninput="onFioInput()" onfocus="onFioInput()" onblur="setTimeout(()=>hideSuggestions(),200)">
-          <button type="button" class="btn btn-secondary btn-sm" onclick="editSelectedEmployee()" title="Редактировать карточку">✏️</button>
+          <button type="button" class="btn btn-secondary btn-sm" onclick="editSelectedEmployee()">✏️</button>
         </div>
         <div class="fio-suggestions" id="fioSuggestions"></div>
       </div>
@@ -365,7 +348,7 @@ tr:hover { background: #fcfcfc; }
       <div class="table-actions no-print">
         <button class="btn btn-secondary btn-sm" onclick="printReport()">🖨 Печать</button>
         <button class="btn btn-secondary btn-sm" onclick="downloadCSV()">💾 Excel</button>
-        <button class="btn btn-primary btn-sm" onclick="openArchiveModal()">📦 Архив + новый месяц</button>
+        <button class="btn btn-primary btn-sm" onclick="openArchiveModal()"> Архив + новый месяц</button>
       </div>
     </div>
     <table id="tripsTable">
@@ -393,7 +376,7 @@ tr:hover { background: #fcfcfc; }
 <div class="modal-overlay" id="employeesModal">
   <div class="modal">
     <h2>
-      👥 Карточки сотрудников
+       Карточки сотрудников
       <button class="modal-close" onclick="closeEmployeesModal()">✕</button>
     </h2>
     <div style="background: #e8f5e9; padding: 14px; border-radius: 8px; margin-bottom: 16px;">
@@ -414,10 +397,10 @@ tr:hover { background: #fcfcfc; }
         <label>Основной адрес</label>
         <input type="text" id="newEmpAddress" placeholder="ул. Ленина, 1">
       </div>
-      <button class="btn btn-primary" onclick="addEmployee()">➕ Добавить</button>
+      <button class="btn btn-primary" onclick="addEmployee()"> Добавить</button>
     </div>
     <div>
-      <div style="font-weight: 600; margin-bottom: 10px; color: var(--text-light);">📋 Список (<span id="empCount">0</span>)</div>
+      <div style="font-weight: 600; margin-bottom: 10px; color: var(--text-light);"> Список (<span id="empCount">0</span>)</div>
       <div id="employeesList"></div>
     </div>
   </div>
@@ -426,8 +409,8 @@ tr:hover { background: #fcfcfc; }
 <div class="modal-overlay" id="editEmployeeModal">
   <div class="modal">
     <h2>
-      ✏️ Редактирование карточки
-      <button class="modal-close" onclick="closeEditEmployeeModal()">✕</button>
+      ️ Редактирование карточки
+      <button class="modal-close" onclick="closeEditEmployeeModal()"></button>
     </h2>
     <input type="hidden" id="editEmpId">
     <div class="form-group" style="margin-bottom: 10px;">
@@ -467,7 +450,7 @@ tr:hover { background: #fcfcfc; }
       <p>Остаток для переноса: <span class="highlight" id="archiveRemaining"></span></p>
     </div>
     <div class="form-group" style="margin-bottom: 16px;">
-      <label>📅 Выберите месяц для создания</label>
+      <label> Выберите месяц для создания</label>
       <input type="month" id="archiveNewMonth">
     </div>
     <div class="form-group" style="margin-bottom: 20px;">
@@ -490,7 +473,7 @@ tr:hover { background: #fcfcfc; }
 
 <script>
 // =====================================================
-// FIREBASE + ОСНОВНАЯ ЛОГИКА
+// ДАННЫЕ И ПЕРЕМЕННЫЕ
 // =====================================================
 
 let data = {
@@ -503,37 +486,27 @@ let data = {
 
 let selectedEmployeeId = null;
 let firebaseReady = false;
-let unsubscribe = null; // Подписка на изменения в Firestore
-let isLocalUpdate = false; // Флаг, чтобы не реагировать на свои же обновления
+let unsubscribe = null;
+let isLocalUpdate = false;
 
-// === ИНДИКАТОР СИНХРОНИЗАЦИИ ===
-function setSyncStatus(status, text) {
-  const el = document.getElementById('syncStatus');
-  const textEl = document.getElementById('syncStatusText');
-  el.className = 'sync-status ' + status;
-  textEl.textContent = text;
-}
+// =====================================================
+// FIREBASE: ИНИЦИАЛИЗАЦИЯ
+// =====================================================
 
-// === FIREBASE: ИНИЦИАЛИЗАЦИЯ И СИНХРОНИЗАЦИЯ ===
 function initFirebase() {
   // Проверяем, что конфиг заполнен
-  if (firebaseConfig.apiKey === "ВСТАВЬ_СЮДА_API_KEY" || !firebaseConfig.apiKey) {
-    showFirebaseError('Не заполнен firebaseConfig. Откройте код и вставьте настройки из Firebase Console.');
+  if (!firebaseConfig.apiKey || firebaseConfig.apiKey.includes("ВСТАВЬ")) {
+    showFirebaseError('Не заполнен firebaseConfig.');
     setSyncStatus('error', 'Локально');
     loadFromLocalStorage();
     return;
   }
 
   try {
-    // Проверяем подключение
     db.enableNetwork().then(() => {
       firebaseReady = true;
-      setSyncStatus('connected', '🟢 Онлайн');
-      
-      // Подписка на изменения в реальном времени
+      setSyncStatus('connected', ' Онлайн');
       subscribeToChanges();
-      
-      // Первая загрузка
       loadFromFirebase();
     }).catch(err => {
       console.error('Ошибка сети Firebase:', err);
@@ -551,11 +524,18 @@ function initFirebase() {
 
 function showFirebaseError(text) {
   const banner = document.getElementById('firebaseErrorBanner');
-  document.getElementById('firebaseErrorText').innerHTML = text;
+  document.getElementById('firebaseErrorText').textContent = text;
   banner.classList.add('show');
 }
 
-// Подписка на изменения в Firestore (живая синхронизация)
+function setSyncStatus(status, text) {
+  const el = document.getElementById('syncStatus');
+  const textEl = document.getElementById('syncStatusText');
+  el.className = 'sync-status ' + status;
+  textEl.textContent = text;
+}
+
+// Подписка на изменения в Firestore
 function subscribeToChanges() {
   if (unsubscribe) unsubscribe();
   
@@ -567,23 +547,18 @@ function subscribeToChanges() {
     
     if (doc.exists) {
       const remoteData = doc.data();
-      // Обновляем локальные данные из Firebase
       data = {
-        budget: remoteData.budget || 50000,
+        budget: remoteData.budget !== undefined ? remoteData.budget : 50000,
         currentMonth: remoteData.currentMonth || new Date().toISOString().slice(0, 7),
         trips: remoteData.trips || [],
         archive: remoteData.archive || [],
         employees: remoteData.employees || []
       };
       
-      // Сохраняем в localStorage как кэш
       localStorage.setItem('taxiData', JSON.stringify(data));
-      
-      // Обновляем UI
       render();
       setSyncStatus('connected', '🟢 Синхронизировано');
     } else {
-      // Документа нет — создаём его из локальных данных
       saveToFirebase();
     }
   }, (error) => {
@@ -599,19 +574,17 @@ async function loadFromFirebase() {
     if (doc.exists) {
       const remoteData = doc.data();
       data = {
-        budget: remoteData.budget || 50000,
-        currentMonth: remoteMonth: remoteData.currentMonth || new Date().toISOString().slice(0, 7),
+        budget: remoteData.budget !== undefined ? remoteData.budget : 50000,
+        currentMonth: remoteData.currentMonth || new Date().toISOString().slice(0, 7),
         trips: remoteData.trips || [],
         archive: remoteData.archive || [],
         employees: remoteData.employees || []
       };
     } else {
-      // Первый запуск — загружаем из localStorage или создаём пустые
       loadFromLocalStorage();
       await saveToFirebase();
     }
     
-    // Обновляем UI
     document.getElementById('monthSelector').value = data.currentMonth;
     document.getElementById('tripDate').valueAsDate = new Date();
     document.getElementById('budgetInput').value = data.budget;
@@ -623,7 +596,6 @@ async function loadFromFirebase() {
   }
 }
 
-// Загрузка из localStorage (кэш / офлайн)
 function loadFromLocalStorage() {
   const saved = localStorage.getItem('taxiData');
   if (saved) {
@@ -642,16 +614,13 @@ function loadFromLocalStorage() {
   }
 }
 
-// Сохранение в Firebase + localStorage
 async function saveToFirebase() {
-  // Всегда сохраняем в localStorage как кэш
   localStorage.setItem('taxiData', JSON.stringify(data));
   
-  // Если Firebase готов — сохраняем туда
   if (firebaseReady) {
     try {
       setSyncStatus('syncing', '🔄 Сохранение...');
-      isLocalUpdate = true; // Помечаем, что это наше обновление
+      isLocalUpdate = true;
       
       await db.collection(COLLECTION).doc(DOC_ID).set({
         budget: data.budget,
@@ -671,7 +640,10 @@ async function saveToFirebase() {
   }
 }
 
-// === УТИЛИТЫ ===
+// =====================================================
+// УТИЛИТЫ
+// =====================================================
+
 function formatMoney(amount) {
   return Number(amount).toLocaleString('ru-RU') + ' ₽';
 }
@@ -696,7 +668,10 @@ function saveBudget() {
   }
 }
 
-// === КАРТОЧКИ СОТРУДНИКОВ ===
+// =====================================================
+// КАРТОЧКИ СОТРУДНИКОВ
+// =====================================================
+
 function openEmployeesModal() {
   renderEmployeesList();
   document.getElementById('employeesModal').classList.add('active');
@@ -810,7 +785,10 @@ function saveEditedEmployee() {
   closeEditEmployeeModal();
 }
 
-// === АВТОЗАПОЛНЕНИЕ ===
+// =====================================================
+// АВТОЗАПОЛНЕНИЕ
+// =====================================================
+
 function onFioInput() {
   const input = document.getElementById('tripFio');
   const value = input.value.trim().toLowerCase();
@@ -854,7 +832,7 @@ function onFioInput() {
   } else if (value.length >= 3) {
     const createDiv = document.createElement('div');
     createDiv.className = 'create-new-hint';
-    createDiv.innerHTML = `➕ Создать карточку для "${escapeHtml(input.value)}"`;
+    createDiv.innerHTML = ` Создать карточку для "${escapeHtml(input.value)}"`;
     createDiv.onclick = () => createEmployeeFromInput();
     suggestions.appendChild(createDiv);
     suggestions.classList.add('active');
@@ -907,7 +885,10 @@ function editSelectedEmployee() {
   openEditEmployee(selectedEmployeeId);
 }
 
-// === ПОЕЗДКИ ===
+// =====================================================
+// ПОЕЗДКИ
+// =====================================================
+
 function addTrip() {
   const date = document.getElementById('tripDate').value;
   const fio = document.getElementById('tripFio').value.trim();
@@ -939,7 +920,10 @@ function deleteTrip(index) {
   }
 }
 
-// === АРХИВАЦИЯ ===
+// =====================================================
+// АРХИВАЦИЯ
+// =====================================================
+
 function openArchiveModal() {
   if (data.trips.length === 0 && data.budget === 0) {
     alert('Нет данных для архивации');
@@ -1023,7 +1007,10 @@ function deleteArchive(index) {
   }
 }
 
-// === ПЕЧАТЬ И СКАЧИВАНИЕ ===
+// =====================================================
+// ПЕЧАТЬ И СКАЧИВАНИЕ
+// =====================================================
+
 function printReport() { window.print(); }
 
 function downloadCSV() {
@@ -1085,7 +1072,10 @@ function escapeHtml(str) {
   }[c]));
 }
 
-// === ОТРИСОВКА ===
+// =====================================================
+// ОТРИСОВКА
+// =====================================================
+
 function render() {
   const spent = data.trips.reduce((sum, t) => sum + t.amount, 0);
   const remaining = data.budget - spent;
@@ -1156,7 +1146,10 @@ function render() {
   }
 }
 
-// === PWA INSTALLATION ===
+// =====================================================
+// PWA INSTALLATION
+// =====================================================
+
 let deferredPrompt;
 window.addEventListener('beforeinstallprompt', (e) => {
   e.preventDefault();
@@ -1179,10 +1172,13 @@ window.addEventListener('appinstalled', () => {
   deferredPrompt = null;
 });
 
-// === SERVICE WORKER ===
+// =====================================================
+// SERVICE WORKER
+// =====================================================
+
 if ('serviceWorker' in navigator) {
   const swCode = `
-    const CACHE_NAME = 'taxi-v2';
+    const CACHE_NAME = 'taxi-v3';
     self.addEventListener('install', (e) => { self.skipWaiting(); });
     self.addEventListener('activate', (e) => { e.waitUntil(clients.claim()); });
     self.addEventListener('fetch', (e) => {
@@ -1202,7 +1198,10 @@ if ('serviceWorker' in navigator) {
   navigator.serviceWorker.register(swURL).catch(err => console.log('SW:', err));
 }
 
-// === ЗАКРЫТИЕ МОДАЛОК ===
+// =====================================================
+// ЗАКРЫТИЕ МОДАЛОК
+// =====================================================
+
 document.querySelectorAll('.modal-overlay').forEach(overlay => {
   overlay.addEventListener('click', (e) => {
     if (e.target === overlay) overlay.classList.remove('active');
@@ -1216,7 +1215,10 @@ document.addEventListener('keydown', (e) => {
   }
 });
 
-// === СТАРТ ===
+// =====================================================
+// СТАРТ
+// =====================================================
+
 initFirebase();
 </script>
 
