@@ -1,0 +1,24 @@
+{
+  "name": "Учёт поездок на такси",
+  "short_name": "Такси",
+  "description": "Учёт поездок на такси с синхронизацией",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#f8f9fa",
+  "theme_color": "#2d8b4d",
+  "icons": [
+    {
+      "src": "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 192 192'%3E%3Crect width='192' height='192' fill='%232d8b4d'/%3E%3Ctext x='96' y='140' font-size='120' text-anchor='middle' fill='white'%3E🚕%3C/text%3E%3C/svg%3E",
+      "sizes": "192x192",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Crect width='512' height='512' fill='%232d8b4d'/%3E%3Ctext x='256' y='370' font-size='320' text-anchor='middle' fill='white'%3E🚕%3C/text%3E%3C/svg%3E",
+      "sizes": "512x512",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}
